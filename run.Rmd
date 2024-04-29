@@ -1,0 +1,95 @@
+# load libraries
+```{r}
+library(usethis)
+library(testthat)
+library(here)
+```
+
+# create directories
+```{r}
+# Create directories and subdirectories
+use_directory("./tests/testthat/")
+use_directory("./tests/testthat/test-subdirectory")
+use_directory("./R/")
+use_directory("./R/subdirectory")
+```
+
+# how to create and open files in a package setting
+```{r}
+use_r("fizzbuzz")
+use_test("fizzbuzz")
+```
+
+# You cannot use `use_r` or `use_test` to make subdirectories
+```{r}
+tryCatch(
+  {
+    use_r("./R/subdirectory/fizzbuzz")
+  },
+  error = function(e) {
+    message('An error occurred')
+    print(e)
+  },
+  warning = function(w) {
+    message('A warrning occurred')
+    print(w)
+  }
+)
+```
+
+```{r}
+tryCatch(
+  {
+    use_test("./tests/testthat/subdirectory/fizzbuzz")
+  },
+  error = function(e) {
+    message('An error occurred')
+    print(e)
+  },
+  warning = function(w) {
+    message('A warrning occurred')
+    print(w)
+  }
+)
+```
+
+```{r}
+# instead you can use file create. 
+
+
+## Note: these are commented out because they are already created. If they are 
+## run again the information in the files will be deleted.
+## Note: you have to start test file names with 'test-' or testthat won't work
+
+# file.create("./R/subdirectory/hello_world.R")
+# file.create("./tests/testthat/test-subdirectory/test-hello_world.R")
+```
+
+# Example of how you would use {testthat} in a package environment.
+```{r}
+# NOTE: this will not work because we are not in a package.
+
+# devtools::load_all() # reload the altered function
+# devtools::test() # run the entire test suite, OR
+# devtools::check() # as part of the R CMD check
+```
+
+# Example of how you would use {testthat} outside of a package environment.
+```{r}
+# run a test file
+
+test_file("./tests/testthat/test-fizzbuzz.R")
+cat("\n \n")
+test_file("./tests/testthat/test-subdirectory/test-hello_world.R") # subdirectory
+```
+
+```{r}
+# OR run all test files in a directory 
+# (file names for tests must start with "test-" or this won't work)
+# Note: this will only look for files that start with 'test-' in the directory that you have chosen
+
+test_dir("./tests/testthat/")
+cat("\n \n")
+test_dir("./tests/testthat/test-subdirectory/")
+```
+
